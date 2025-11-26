@@ -9,6 +9,7 @@ import { PerformanceExample } from "./pages/PerformanceExample";
 import { PriceChartExample } from "./pages/PriceChartExample";
 import { SeriesPrimitivesExample } from "./pages/SeriesPrimitivesExample";
 import { TimeChartExample } from "./pages/TimeChartExample";
+import { TooltipExample } from "./pages/TooltipExample";
 import { YieldCurveChartExample } from "./pages/YieldCurveChartExample";
 
 type ExamplePage = {
@@ -41,6 +42,12 @@ const examples: ExamplePage[] = [
     path: "/events",
     name: "Chart Events",
     component: EventsExample,
+    category: "Core Charts",
+  },
+  {
+    path: "/tooltip",
+    name: "Tooltips",
+    component: TooltipExample,
     category: "Core Charts",
   },
   {

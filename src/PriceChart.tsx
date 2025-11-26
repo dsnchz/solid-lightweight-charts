@@ -20,6 +20,7 @@ import {
 } from "solid-js";
 
 import { SERIES_DEFINITION_MAP } from "./constants";
+import { createTooltip } from "./createTooltip";
 import type {
   BuiltInSeriesType,
   ChartCommonProps,
@@ -32,6 +33,7 @@ import type {
   PaneProps,
   SeriesPrimitive,
   SeriesProps,
+  TooltipRootProps,
 } from "./types";
 import { attachPanePrimitives, createSubscriptionEffect, detachPanePrimitives } from "./utils";
 
@@ -94,6 +96,7 @@ export const PriceChart = (props: ParentProps<OptionsChartProps>): JSX.Element =
       height: 0,
       forceRepaintOnResize: false,
       primitives: [] as PanePrimitive<number>[],
+      style: {} as JSX.CSSProperties,
     },
     props,
   );
@@ -172,9 +175,14 @@ export const PriceChart = (props: ParentProps<OptionsChartProps>): JSX.Element =
   const classes = () =>
     local.class ? `solid-lwc-container ${local.class}` : "solid-lwc-container";
 
+  const containerStyle = () => ({
+    position: "relative" as const,
+    ...local.style,
+  });
+
   return (
     <>
-      <div id={local.id} class={classes()} style={local.style} ref={chartContainer} />
+      <div id={local.id} class={classes()} style={containerStyle()} ref={chartContainer} />
       <Show when={chart()}>
         {(chart) => (
           <PriceChartContext.Provider
@@ -457,3 +465,39 @@ const CustomSeries = (props: CustomSeriesProps<number>) => {
  * @see https://tradingview.github.io/lightweight-charts/docs/plugins/custom_series
  */
 PriceChart.CustomSeries = CustomSeries;
+
+const Tooltip = (props: TooltipRootProps<number>) => {
+  const { chart } = usePriceChart();
+  createTooltip(chart, props);
+  return null;
+};
+
+/**
+ * Custom tooltip component for the `PriceChart`.
+ *
+ * Renders a JSX-based tooltip that displays when hovering over chart data.
+ * The tooltip automatically follows the cursor and hides when moving outside the chart bounds.
+ *
+ * @param props.children - Function that receives tooltip data and returns JSX to render
+ * @param props.component - Alternative to children: a component that receives tooltip data as props
+ * @param props.offset - Position offset from cursor (default: { x: 8, y: 8 })
+ * @param props.fixed - Use fixed positioning for modals/dialogs (default: false)
+ * @param props.onShow - Callback when tooltip becomes visible
+ * @param props.onHide - Callback when tooltip becomes hidden
+ *
+ * @example
+ * ```tsx
+ * <PriceChart>
+ *   <PriceChart.Series type="Line" data={data} />
+ *   <PriceChart.Tooltip>
+ *     {({ time, seriesData }) => (
+ *       <div class="tooltip">
+ *         <div>Price: {time}</div>
+ *         <div>Value: {Array.from(seriesData.values())[0]?.value}</div>
+ *       </div>
+ *     )}
+ *   </PriceChart.Tooltip>
+ * </PriceChart>
+ * ```
+ */
+PriceChart.Tooltip = Tooltip;

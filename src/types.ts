@@ -14,7 +14,7 @@ import type {
   SeriesType,
   Time,
 } from "lightweight-charts";
-import type { Accessor, JSX } from "solid-js";
+import type { Accessor, Component, JSX } from "solid-js";
 
 // Special internal type to track the next pane index for chart instances
 export type ChartWithPaneState<T> = T & {
@@ -281,4 +281,135 @@ export type PaneProps<HorzScaleItem = Time> = {
    * @param primitives - The primitives that were detached from the pane
    */
   readonly onDetachPrimitives?: (primitives: PanePrimitive<HorzScaleItem>[]) => void;
+};
+
+type SeriesDataValue<T extends SeriesType = SeriesType, HorzScaleItem = Time> =
+  | SeriesDataItemTypeMap[T]
+  | { time: HorzScaleItem };
+
+/**
+ * The position of the cursor relative to the chart's top-left corner.
+ */
+type Point = {
+  readonly x: number;
+  readonly y: number;
+};
+
+/**
+ * The position of the tooltip relative to the cursor position.
+ */
+type Position = {
+  readonly left: number;
+  readonly top: number;
+};
+
+/**
+ * The chart API for the tooltip.
+ *
+ * @see https://tradingview.github.io/lightweight-charts/docs/api/interfaces/IChartApiBase
+ */
+export type TooltipChartApi<HorzScaleItem = Time> = Omit<IChartApiBase<HorzScaleItem>, "addSeries">;
+
+/**
+ * Props passed to the SolidJS component that renders the tooltip content.
+ *
+ * Note: These props are only provided when the tooltip is visible and the cursor
+ * is within bounds, so time and point are guaranteed to be defined.
+ */
+export type TooltipProps<HorzScaleItem = Time> = {
+  /** Chart instance for advanced use cases */
+  readonly chart: TooltipChartApi<HorzScaleItem>;
+
+  /** Cursor position relative to the chart's top-left corner */
+  readonly point: Point;
+
+  /** Time/horizontal axis value at the cursor position */
+  readonly time: HorzScaleItem;
+
+  /** Map of series to their data values at the cursor position */
+  readonly seriesData: Map<
+    ISeriesApi<SeriesType, HorzScaleItem>,
+    SeriesDataValue<SeriesType, HorzScaleItem>
+  >;
+};
+
+/**
+ * The root props for the chart tooltip component.
+ */
+export type TooltipRootProps<HorzScaleItem = Time> = {
+  /**
+   * HTML id attribute for the tooltip root
+   *
+   * @default "solid-lwc-tooltip-root"
+   */
+  readonly id?: string;
+  /**
+   * CSS class name for the tooltip root
+   *
+   * @default undefined
+   */
+  readonly class?: string;
+  /**
+   * Inline styles for the tooltip root
+   *
+   * @default {}
+   */
+  readonly style?: JSX.CSSProperties;
+  /**
+   * The z-index of the tooltip root
+   * @default 20
+   */
+  readonly zIndex?: number;
+  /**
+   * Use fixed positioning for the tooltip. Set to true when the chart is in a
+   * fixed positioning context (like a dialog or modal) to prevent tooltip clipping.
+   * @default false
+   */
+  readonly fixed?: boolean;
+
+  /**
+   * The offset of the tooltip from the cursor position.
+   * @default { x: 8, y: 8 }
+   */
+  readonly offset?: {
+    readonly x?: number;
+    readonly y?: number;
+  };
+
+  /**
+   * Optional children function to render the tooltip content.
+   */
+  readonly children?: (props: TooltipProps<HorzScaleItem>) => JSX.Element;
+
+  /**
+   * Optional component to render the tooltip content.
+   */
+  readonly component?: Component<TooltipProps<HorzScaleItem>>;
+
+  /**
+   * Optional callback to process or modify the calculated tooltip position.
+   * Receives the calculated position and placement preference, and should return a position object with the same structure.
+   * Use this to implement custom positioning logic or constraints.
+   *
+   * @param position - The calculated position with left and top coordinates
+   * @returns Modified position object with left and top coordinates
+   *
+   * @example
+   * ```ts
+   * onPositionCalculated: (position) => ({
+   *   left: Math.max(0, position.left), // Prevent negative positioning
+   *   top: position.top - 5
+   * })
+   * ```
+   */
+  readonly onPositionCalculated?: (position: Position) => Position;
+
+  /**
+   * Optional callback to be called when the tooltip is hidden.
+   */
+  readonly onHide?: () => void;
+  /**
+   * Optional callback to be called when the tooltip is shown.
+   */
+  readonly onShow?: () => void;
 };
