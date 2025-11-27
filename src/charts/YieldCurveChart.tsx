@@ -23,6 +23,7 @@ import {
 } from "solid-js";
 
 import { SERIES_DEFINITION_MAP } from "../constants";
+import { createCustomSeries } from "../helpers/createCustomSeries";
 import { createTooltip } from "../helpers/createTooltip";
 import {
   attachPanePrimitives,
@@ -264,6 +265,7 @@ const Series = <T extends YieldCurveSeriesType>(props: SeriesProps<T, number>) =
     onChartPrimitivesAttached,
     onChartPrimitivesDetached,
   } = useYieldCurveChart();
+
   const { paneIdx, panePrimitives, onPanePrimitivesAttached, onPanePrimitivesDetached } =
     useContext(PaneContext);
 
@@ -376,86 +378,19 @@ const CustomSeries = (props: CustomSeriesProps<number>) => {
     onChartPrimitivesAttached,
     onChartPrimitivesDetached,
   } = useYieldCurveChart();
+
   const { paneIdx, panePrimitives, onPanePrimitivesAttached, onPanePrimitivesDetached } =
     useContext(PaneContext);
 
-  const _props = mergeProps(
-    {
-      primitives: [] as SeriesPrimitive<"Custom", number>[],
-      markers: () => [] as SeriesMarker<number>[],
-    },
-    props,
-  );
-
-  const [local, options] = splitProps(_props, [
-    "data",
-    "primitives",
-    "markers",
-    "paneView",
-    "onCreateSeries",
-    "onRemoveSeries",
-    "onSetData",
-    "onSetMarkers",
-    "onAttachPrimitives",
-    "onDetachPrimitives",
-  ]);
-
-  onMount(() => {
-    const series = chart().addCustomSeries(local.paneView, options, paneIdx());
-    local.onCreateSeries?.(series, paneIdx());
-
-    const seriesPane = chart().panes()[paneIdx()];
-
-    createEffect(() => {
-      series.setData(local.data);
-      local.onSetData?.({ chart: chart(), series, data: local.data });
-
-      const dataMarkers = local.markers(local.data);
-      createSeriesMarkers(series, dataMarkers);
-      local.onSetMarkers?.(dataMarkers);
-    });
-
-    createEffect(() => {
-      // If paneIdx is 0, use the primitives from the chart context, otherwise use the primitives from the pane context
-      const currentPanePrimitives = paneIdx() === 0 ? chartPrimitives() : panePrimitives();
-      const attachCallback = paneIdx() === 0 ? onChartPrimitivesAttached : onPanePrimitivesAttached;
-      const detachCallback = paneIdx() === 0 ? onChartPrimitivesDetached : onPanePrimitivesDetached;
-
-      attachPanePrimitives(currentPanePrimitives, seriesPane);
-      attachCallback(currentPanePrimitives);
-
-      onCleanup(() => {
-        detachPanePrimitives(currentPanePrimitives, seriesPane);
-        detachCallback(currentPanePrimitives);
-      });
-    });
-
-    createEffect(() => {
-      const currentPrimitives = local.primitives;
-
-      for (const primitive of currentPrimitives) {
-        series.attachPrimitive(primitive);
-      }
-
-      local.onAttachPrimitives?.(currentPrimitives);
-
-      onCleanup(() => {
-        for (const primitive of currentPrimitives) {
-          series.detachPrimitive(primitive);
-        }
-
-        local.onDetachPrimitives?.(currentPrimitives);
-      });
-    });
-
-    createEffect(() => {
-      series.applyOptions(options);
-    });
-
-    onCleanup(() => {
-      chart().removeSeries(series);
-      local.onRemoveSeries?.(series, paneIdx());
-    });
+  createCustomSeries(props, {
+    chart,
+    paneIdx,
+    chartPrimitives,
+    panePrimitives,
+    onChartPrimitivesAttached,
+    onChartPrimitivesDetached,
+    onPanePrimitivesAttached,
+    onPanePrimitivesDetached,
   });
 
   return null;
