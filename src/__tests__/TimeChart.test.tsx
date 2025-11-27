@@ -4,7 +4,7 @@ import { createSeriesMarkers } from "lightweight-charts";
 import { createSignal } from "solid-js";
 import { describe, expect, test, vi } from "vitest";
 
-import { TimeChart } from "../TimeChart";
+import { TimeChart } from "../charts/TimeChart";
 
 describe("CHART: TimeChart", () => {
   test("creates the lightweight-charts container", () => {

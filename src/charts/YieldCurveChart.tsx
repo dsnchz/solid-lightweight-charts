@@ -22,8 +22,13 @@ import {
   useContext,
 } from "solid-js";
 
-import { SERIES_DEFINITION_MAP } from "./constants";
-import { createTooltip } from "./createTooltip";
+import { SERIES_DEFINITION_MAP } from "../constants";
+import { createTooltip } from "../helpers/createTooltip";
+import {
+  attachPanePrimitives,
+  createSubscriptionEffect,
+  detachPanePrimitives,
+} from "../helpers/utils";
 import type {
   ChartCommonProps,
   ChartContextType,
@@ -35,8 +40,7 @@ import type {
   SeriesPrimitive,
   SeriesProps,
   TooltipRootProps,
-} from "./types";
-import { attachPanePrimitives, createSubscriptionEffect, detachPanePrimitives } from "./utils";
+} from "../types";
 
 const YieldCurveChartContext = createContext<ChartContextType<IYieldCurveChartApi, number>>();
 

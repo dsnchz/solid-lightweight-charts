@@ -5,7 +5,7 @@ import { createSeriesMarkers } from "lightweight-charts";
 import { createSignal } from "solid-js";
 import { describe, expect, test, vi } from "vitest";
 
-import { PriceChart } from "../PriceChart";
+import { PriceChart } from "../charts/PriceChart";
 import type { IOptionsChartApi } from "../types";
 
 describe("CHART: PriceChart", () => {

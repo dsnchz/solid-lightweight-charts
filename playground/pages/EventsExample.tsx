@@ -1,9 +1,9 @@
 import type { MouseEventParams, Time } from "lightweight-charts";
 import { createSignal, type JSX } from "solid-js";
 
-import { PriceChart } from "../../src/PriceChart";
-import { TimeChart } from "../../src/TimeChart";
-import { YieldCurveChart } from "../../src/YieldCurveChart";
+import { PriceChart } from "../../src/charts/PriceChart";
+import { TimeChart } from "../../src/charts/TimeChart";
+import { YieldCurveChart } from "../../src/charts/YieldCurveChart";
 
 type EventData = MouseEventParams<Time | number>;
 

@@ -12,7 +12,7 @@ import {
 } from "solid-js";
 import { render } from "solid-js/web";
 
-import type { TooltipChartApi, TooltipProps, TooltipRootProps } from "./types";
+import type { TooltipChartApi, TooltipProps, TooltipRootProps } from "../types";
 
 /**
  * Creates a tooltip for any Lightweight Charts instance.

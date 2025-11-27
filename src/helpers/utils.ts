@@ -1,9 +1,9 @@
 import type { IChartApiBase, IPaneApi, MouseEventHandler, Time } from "lightweight-charts";
 import { createEffect, onCleanup } from "solid-js";
 
-import type { PanePrimitive } from "./types";
+import type { PanePrimitive } from "../types";
 
-export const detachPanePrimitives = <HorzScaleItem = Time,>(
+export const detachPanePrimitives = <HorzScaleItem = Time>(
   primitives: PanePrimitive<HorzScaleItem>[],
   pane?: IPaneApi<HorzScaleItem>,
 ) => {
@@ -14,7 +14,7 @@ export const detachPanePrimitives = <HorzScaleItem = Time,>(
   }
 };
 
-export const attachPanePrimitives = <HorzScaleItem = Time,>(
+export const attachPanePrimitives = <HorzScaleItem = Time>(
   primitives: PanePrimitive<HorzScaleItem>[],
   pane?: IPaneApi<HorzScaleItem>,
 ) => {
@@ -37,7 +37,7 @@ type ChartUnubscriptionMethod<HorzScaleItem = Time> = keyof Pick<
   "unsubscribeClick" | "unsubscribeDblClick" | "unsubscribeCrosshairMove"
 >;
 
-export const createSubscriptionEffect = <HorzScaleItem = Time,>(
+export const createSubscriptionEffect = <HorzScaleItem = Time>(
   chart: Omit<IChartApiBase<HorzScaleItem>, "addSeries">,
   methods: [ChartSubscriptionMethod<HorzScaleItem>, ChartUnubscriptionMethod<HorzScaleItem>],
   eventHandlers?: MouseEventHandler<HorzScaleItem> | MouseEventHandler<HorzScaleItem>[],

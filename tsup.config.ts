@@ -7,7 +7,7 @@ const generateSolidPresetOptions = (watching: boolean): preset.PresetOptions => 
   entries: [
     {
       // entries with '.tsx' extension will have `solid` export condition generated
-      entry: "src/index.tsx",
+      entry: "src/index.ts",
       dev_entry: false,
       server_entry: false,
     },
