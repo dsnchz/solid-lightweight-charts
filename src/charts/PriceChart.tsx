@@ -383,6 +383,7 @@ const CustomSeries = (props: CustomSeriesProps<number>) => {
   const _props = mergeProps(
     {
       primitives: [] as SeriesPrimitive<"Custom", number>[],
+      markers: () => [] as SeriesMarker<number>[],
     },
     props,
   );
@@ -390,10 +391,12 @@ const CustomSeries = (props: CustomSeriesProps<number>) => {
   const [local, options] = splitProps(_props, [
     "data",
     "primitives",
+    "markers",
+    "paneView",
     "onCreateSeries",
     "onRemoveSeries",
     "onSetData",
-    "paneView",
+    "onSetMarkers",
     "onAttachPrimitives",
     "onDetachPrimitives",
   ]);
@@ -407,6 +410,10 @@ const CustomSeries = (props: CustomSeriesProps<number>) => {
     createEffect(() => {
       series.setData(local.data);
       local.onSetData?.({ chart: chart(), series, data: local.data });
+
+      const dataMarkers = local.markers(local.data);
+      createSeriesMarkers(series, dataMarkers);
+      local.onSetMarkers?.(dataMarkers);
     });
 
     createEffect(() => {
