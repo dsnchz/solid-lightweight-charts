@@ -1,6 +1,6 @@
 {
   "name": "@dschz/solid-lightweight-charts",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "license": "MIT",
   "exports": "./src/index.tsx",
   "publish": {

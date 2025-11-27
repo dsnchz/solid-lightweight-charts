@@ -1,5 +1,111 @@
 # @dschz/solid-lightweight-charts
 
+## 0.4.0
+
+### Summary
+
+Version 0.4.0 introduces comprehensive tooltip support across all chart types with flexible rendering options and full SolidJS reactivity.
+
+#### 💬 Custom JSX Tooltips
+
+- **Tooltip components** for all chart types (`TimeChart.Tooltip`, `PriceChart.Tooltip`, `YieldCurveChart.Tooltip`)
+- **Two rendering modes** for maximum flexibility:
+  - **Inline JSX pattern** - Render tooltips using a children function that receives tooltip data
+  - **Component prop pattern** - Pass reusable tooltip components for consistent styling across charts
+- **Full type safety** with TypeScript integration and proper chart-specific types
+- **SolidJS reactivity** - Tooltips automatically update when hovering over chart data
+- **Flexible positioning** with customizable offset, placement, and styling options
+- **Automatic lifecycle management** - Tooltips are properly mounted, updated, and cleaned up
+
+#### 📊 Tooltip Props & Configuration
+
+**TooltipRootProps** - Configuration options for tooltip behavior:
+
+- `id` - HTML id attribute for the tooltip root element (default: "solid-lwc-tooltip-root")
+- `class` - CSS class for custom styling
+- `style` - Inline styles for the tooltip container
+- `zIndex` - Z-index for tooltip positioning (default: 20)
+- `fixed` - Use fixed positioning for modals/dialogs (default: false)
+- `offset` - Position offset from cursor (default: { x: 8, y: 8 })
+- `onShow` - Callback when tooltip becomes visible
+- `onHide` - Callback when tooltip becomes hidden
+- `onPositionCalculated` - Callback for custom position calculations
+- `children` - Function that receives tooltip data and returns JSX
+- `component` - Alternative to children: a component that receives tooltip data as props
+
+**TooltipProps** - Data passed to tooltip render functions:
+
+- `chart` - The chart instance for advanced use cases
+- `point` - Cursor position relative to the chart's top-left corner
+- `time` - Time/horizontal axis value at the cursor position (Time for TimeChart, number for PriceChart/YieldCurveChart)
+- `seriesData` - Map of series to their data values at the cursor position
+
+#### 📝 Usage Examples
+
+**Inline JSX Pattern:**
+
+```tsx
+<TimeChart>
+  <TimeChart.Series type="Candlestick" data={data} />
+  <TimeChart.Tooltip>
+    {(props) => (
+      <div class="tooltip">
+        <div>Time: {props.time}</div>
+        <div>Value: {Array.from(props.seriesData.values())[0]?.value}</div>
+      </div>
+    )}
+  </TimeChart.Tooltip>
+</TimeChart>
+```
+
+**Component Prop Pattern:**
+
+```tsx
+const MyTooltip = (props: TooltipProps<Time>) => (
+  <div class="tooltip">
+    <div>Time: {props.time}</div>
+    <Show when={Array.from(props.seriesData.values())[0]}>
+      {(data) => <div>Value: {data().value}</div>}
+    </Show>
+  </div>
+);
+
+<TimeChart>
+  <TimeChart.Series type="Line" data={data} />
+  <TimeChart.Tooltip component={MyTooltip} />
+</TimeChart>;
+```
+
+#### 🎯 Chart Type Support
+
+- **TimeChart** - Tooltips with `Time` (string dates) as the horizontal scale
+- **PriceChart** - Tooltips with numeric X-axis values
+- **YieldCurveChart** - Tooltips with duration values (months) as the horizontal scale
+
+#### 🔄 SolidJS Reactivity
+
+Tooltips properly integrate with SolidJS's reactivity system:
+
+- Use `Show` component with callback pattern for reactive data access
+- All props passed to tooltip functions are reactive getters
+- Automatic cleanup and re-rendering on data changes
+
+#### 🛠️ Playground Examples
+
+Added comprehensive `TooltipExample.tsx` showcasing:
+
+- All three chart types with tooltips
+- Both inline JSX and component prop patterns
+- Proper SolidJS reactivity patterns
+- Custom styling and theming examples
+
+#### 🏗️ Internal Improvements
+
+- Created reusable `createCustomSeries` hook for shared custom series logic
+- Created reusable `createSeriesLifecycle` hook for shared series lifecycle management
+- Eliminated ~360 lines of duplicated code across chart implementations
+- Improved maintainability and consistency across all chart types
+
 ## 0.3.3
 
 ### Patch Changes
