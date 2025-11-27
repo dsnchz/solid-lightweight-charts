@@ -19,7 +19,7 @@
 ## 📋 Table of Contents
 
 - [✨ Features](#-features)
-- [🎉 What's New in v0.3.0](#-whats-new-in-v030)
+- [🎉 What's New in v0.4.0](#-whats-new-in-v040)
 - [📆 Installation](#-installation)
 - [🚀 Quick Usage](#-quick-usage)
   - [TimeChart (Time-based Data)](#timechart-time-based-data)
@@ -50,6 +50,7 @@
 - 📈 **Built-in series support**: Line, Area, Candlestick, Bar, Histogram, Baseline
 - 🎨 **Custom series support** with full TypeScript integration across all chart types
 - 📍 **Series markers** with declarative prop support and reactive updates
+- 💬 **Custom JSX tooltips** with flexible rendering (inline JSX or reusable components)
 - 📆 **Namespaced APIs** (e.g. `<TimeChart.Series />`, `<PriceChart.Series />`)
 - 📊 **Multi-Pane support** for advanced multi-series visualization
 - 🖼️ **Pane/Series primitives** for interactive drawings (trend lines, alerts, annotations)
@@ -57,9 +58,9 @@
 - 🔖 **Core API compatibility** - access underlying `lightweight-charts` APIs when needed
 - 🧹 **Automatic cleanup** and proper lifecycle management
 
-## 🎉 What's New in v0.3.0
+## 🎉 What's New in v0.4.0
 
-- Major new features and improvements, including chart event subscription support, default class on chart containers, and improved sizing behavior.
+- **Custom JSX Tooltips** - Full tooltip support across all chart types (TimeChart, PriceChart, YieldCurveChart) with flexible rendering options using either inline JSX or reusable components
 - For a full list of changes and details, see the [CHANGELOG.md](./CHANGELOG.md).
 
 ## 📆 Installation
