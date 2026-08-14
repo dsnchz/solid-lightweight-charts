@@ -4,3 +4,6 @@ node_modules
 
 .DS_Store
 /*.tgz
+
+# Agent context & planning (local-only, per-machine)
+.agent/
